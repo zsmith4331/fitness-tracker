@@ -1,27 +1,32 @@
 // Dependencies //
 const router = require("express").Router();
-const { request, response } = require("express");
+const { Workout } = require("../models");
 
 // Required database //
 const db = require("../models"); 
 
-//  Get Route //
-router.get("/workout", async (request, response) => {
+//  Get Routes //
+router.get("/api/workouts", async (request, response) => {
     const results = await db.Workout.find();
     response.json(results)
 });
 
+router.get("/api/workouts/range", async (request, response) => {
+    const results = await db.Workout.find();
+    response.json(results);
+});
+
 // Post Route //
-router.post("/workout", async (request, response) => {
+router.post("/api/workouts", async (request, response) => {
     const results = await db.Workout.create(request.body);
     response.json(results);
 });
 
 // Put Route //
-router.put("workout/:id", async (request, response) => {
+router.put("/api/workouts/:id", async (request, response) => {
     const results = await db.Workout.updateOne(
-        { _id: req.params.id },
-        { $push: { exercises: req.body } }  
+        { _id: request.params.id },
+        { $push: { exercises: request.body } }  
     );
     response.json(results);
 });
