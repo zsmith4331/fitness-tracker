@@ -4,16 +4,22 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const workoutSchema = new Schema({
-    date: {
-      type: Date,
-      default: new Date().setDate(new Date().getDate())
-    },
-    exercises: Array
+  day: { type: Date, default: () => new Date() },
+  exercises: Array  
+},
+{
+  toJSON: {
+    virtuals: true
+  }
 }
 );
-  
-  const workout = mongoose.model("Workout", workoutSchema);
 
-  // Export the database//
-  module.exports = workout;
-  
+workoutSchema.virtual("totalDuration").get(function () {
+  const duration = this.exercises.reduce((total, current) => {return total + current.duration}, 0);
+  return duration;
+});  
+
+const workout = mongoose.model("Workout", workoutSchema);
+
+// Export the database//
+module.exports = workout;
